@@ -1,4 +1,4 @@
-import { Box, Container, makeStyles, Grid, Button, FormControl, InputLabel, Select, MenuItem, ListSubheader, withStyles } from '@material-ui/core';
+import { makeStyles, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
 import { useEffect } from 'react';
 import { shuffle } from '../util/shuffle'
 
@@ -15,7 +15,6 @@ export default function Filter({ data, filter, setFilter, setQueue }) {
   const handleFilterChange = (event, override) => {
     let result = null;
     let target = event?.target?.value || override;
-    console.log(data)
 
     // check if value is defined
     if(target) {
@@ -33,8 +32,14 @@ export default function Filter({ data, filter, setFilter, setQueue }) {
           break;
         case 'Newest':
           result = data;
-          result.sort((a, b) => new Date(b.release_date) - new Date(a.release_date));
+          result.sort((a, b) => new Date(b.release_date) - new Date(a.release_date))
           setQueue(result);
+          break;
+        case 'Oldest':
+          result = data;
+          result.sort((a, b) => new Date(a.release_date) - new Date(b.release_date))
+          setQueue(result);
+          break;
         case 'High Rating':
           result = data;
           result.sort((a, b) => b.vote_average - a.vote_average);
@@ -48,14 +53,14 @@ export default function Filter({ data, filter, setFilter, setQueue }) {
         case 'Shuffle':
           setQueue(shuffle(data));
         default:
-          //setQueue(shuffle(data));
+          setQueue(shuffle(data));
       }
     }
   };
 
   useEffect(() => {
     if(filter === "") {
-      handleFilterChange(null, "Popularity")
+      handleFilterChange(null, "Newest")
     }
   }, [])
 
@@ -71,10 +76,11 @@ export default function Filter({ data, filter, setFilter, setQueue }) {
       >
         {/* <MenuItem value={"None"}>No Filter</MenuItem> */}
         {/* <ListSubheader>Options:</ListSubheader> */}
-        <MenuItem value={"Popularity"}>Popularity</MenuItem>
         <MenuItem value={"Newest"}>Newest</MenuItem>
-        <MenuItem value={"High Rating"}>High Rating</MenuItem>
-        <MenuItem value={"Low Rating"}>Low Rating</MenuItem>
+        <MenuItem value={"Popularity"}>Popularity</MenuItem>
+        <MenuItem value={"High Rating"}>High Ratings</MenuItem>
+        <MenuItem value={"Low Rating"}>Low Ratings</MenuItem>
+        <MenuItem value={"Oldest"}>Oldest</MenuItem>
         <MenuItem value={"Shuffle"}>Random</MenuItem>
       </Select>
     </FormControl>

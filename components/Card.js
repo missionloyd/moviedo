@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import styles from '../styles/Home.module.css';
 import { reformatDate } from '../util/reformatDate';
 
-export default function Card({ movie }) {
-  const length = 120;
+export default function Card({ movie, genres }) {
+  const length = 118;
   const text = movie?.overview + " ";
   const modifiedText = movie?.overview.substring(0, length) + " ";
   const [overview, setOverview] = useState(text.length > length ? modifiedText : text);
@@ -33,25 +33,42 @@ export default function Card({ movie }) {
   }, [expand]);
 
   useEffect(() => {
-    setMounted(true)
+    setMounted(true);
+
   }, []);
 
   return(
     <div 
       className={styles.card} 
       onClick={e => expandText(!expand)}
-      style={expand ? { maxWidth: '90%' } : { maxWidth: '30rem' }}
+      style={expand ? { maxWidth: '90%' } : { maxWidth: '28rem' }}
     >
-      <img 
-        className={styles.poster}
-        src={`https://image.tmdb.org/t/p/original/${movie?.poster_path}`} 
-      />
+      {movie?.poster_path &&
+        <img 
+          className={styles.poster}
+          src={`https://image.tmdb.org/t/p/original/${movie?.poster_path}`} 
+        />
+      }
       <h2>{movie?.original_title}</h2>
       <div className={styles.ratingContainer}>
-        <img src={'/images/imdb.png'} className={styles.imdb}/>
         <h3 className={styles.rating}>{movie?.vote_average}/10 ({movie?.vote_count} reviews)</h3>
+        <img src={'/images/tmdb.svg'} className={styles.tmdb}/>
       </div>
-      <strong className={styles.date}>Release Date: {reformatDate(movie?.release_date) || 'Unknown'}</strong>
+      <div className={styles.extraInfo}>
+        <strong className={styles.date}>Release Date: {reformatDate(movie?.release_date) || 'Unknown'}</strong>
+        <div className={styles.genreList}>
+          {genres && 
+            <strong className={styles.genre}>Genres: </strong>
+          }
+          {genres?.map((gen, key) => {
+            return (
+              <strong className={styles.genre} key={key}>
+                {gen}{genres.length !== key + 1 ? ", " : ""}
+              </strong>
+            );
+          })}
+        </div>
+      </div>
       <section id={`anchor-${movie?.id}`}></section>
       <div className={styles.spacer} />
       <p>{overview}</p>

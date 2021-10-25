@@ -126,7 +126,7 @@
 .ratingContainer {
   display: flex;
   flex-direction: row;
-  align-content: center;
+  align-items: center;
   margin-bottom: 0.5rem;
 }
 
@@ -134,7 +134,7 @@
   margin: 0;
   font-size: 1.20rem;
   line-height: 1.5;
-  margin-left: 0.4rem;
+  margin-right: 0.4rem;
 }
 
 .poster {
@@ -153,11 +153,10 @@
   color: initial;
 }
 
-.imdb {
-  margin: 0;
-  border-radius: 5px;
+.tmdb {
+  /* margin-top: 0.5rem; */
   height: 100%;
-  max-width: 3.5rem;
+  max-width: 7rem;
   object-fit: fill;
 }
 
@@ -176,8 +175,49 @@
   align-items: center;
 }
 
+.creditsContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.credits {
+  font-size: 1rem;
+  margin-right: 0.3rem;
+}
+
+.credits:hover,
+.credits:focus,
+.credits:active {
+  text-decoration: underline;
+}
+
 .description {
   margin-right: 0.5rem;
+}
+
+.footerTitle {
+  color: #E50914;
+}
+
+.extraInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.genre {
+  font-size: 1rem;
+  line-height: 1.5;
+  opacity: 100%;
+  color: initial;
+  margin-right: 0.25rem;
+}
+
+.genreList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 
 @media (max-width: 600px) {
