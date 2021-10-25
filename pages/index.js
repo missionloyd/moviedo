@@ -1,6 +1,6 @@
 import axios from 'axios';
 import Head from 'next/head'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Card from '../components/Card';
 import Filter from '../components/Filter';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -37,7 +37,7 @@ export default function Home({ movies, genres }) {
 
       const moreMovies = res.data.results || null;
 
-      if (moreMovies) {
+      if (!moreMovies) {
         setPostsEnd(true);
       }
       else {
@@ -61,6 +61,10 @@ export default function Home({ movies, genres }) {
     }
   }
 
+  useEffect(() => {
+    scrollToTop();
+  }, [])
+
   return (
     <div className={styles.container}>
       <Head>
@@ -76,9 +80,9 @@ export default function Home({ movies, genres }) {
         </h1>
 
         <div className={styles.prompt}>
-          <p className={styles.description}>
+          <strong className={styles.description}>
             It all starts here:{' '}
-          </p>
+          </strong>
           <Filter data={queue} filter={filter} setFilter={setFilter} setQueue={setQueue} />
         </div>
 

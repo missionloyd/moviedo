@@ -1,21 +1,21 @@
 import { useEffect, useState } from 'react';
 import styles from '../styles/Home.module.css';
 import { reformatDate } from '../util/reformatDate';
+import ImageCarousel from '../components/ImageCarousel';
+import { shuffle } from '../util/shuffle';
 
 export default function Card({ movie, genres }) {
   const length = 118;
-  const text = movie?.overview + " ";
-  const modifiedText = movie?.overview.substring(0, length) + " ";
-  const [overview, setOverview] = useState(text.length > length ? modifiedText : text);
-  const [expand, setExpand] = useState(text.length > length ? false : true);
+  const [overview, setOverview] = useState(null);
+  const [expand, setExpand] = useState(null);
   const [mounted, setMounted] = useState(false);
 
   const expandText = (option) => {
     if(option === true) {
-      setOverview(text);
+      setOverview(movie?.overview);
       setExpand(true);
     } else {
-      setOverview(modifiedText);
+      setOverview(movie?.overview.substring(0, length));
       setExpand(false);
     }
   };
@@ -32,23 +32,27 @@ export default function Card({ movie, genres }) {
     }
   }, [expand]);
 
+
+  useEffect(() => {
+    setOverview(movie?.overview.length > length ? movie?.overview.substring(0, length) : movie?.overview);
+  }, [movie.overview])
+
   useEffect(() => {
     setMounted(true);
-
-  }, []);
+  }, [])
 
   return(
     <div 
       className={styles.card} 
       onClick={e => expandText(!expand)}
-      style={expand ? { maxWidth: '90%' } : { width: '28rem' }}
+      style={expand ? { maxWidth: '35rem' } : { maxWidth: '25rem' }}
     >
       {movie?.poster_path &&
-        <img 
-          className={styles.poster}
-          src={`https://image.tmdb.org/t/p/original/${movie?.poster_path}`} 
-        />
+        <div className={styles.cover}>
+          <ImageCarousel imgs={createImgArray(movie)} exp={expand} />
+        </div>
       }
+      <section id={`anchor-${movie?.id}`}></section>
       <h2>{movie?.original_title}</h2>
       <div className={styles.ratingContainer}>
         <h3 className={styles.rating}>{movie?.vote_average}/10 ({movie?.vote_count} reviews)</h3>
@@ -71,15 +75,35 @@ export default function Card({ movie, genres }) {
           })}
         </div>
       </div>
-      <section id={`anchor-${movie?.id}`}></section>
       <div className={styles.spacer} />
       <p>{overview}</p>
-      {!expand && text.length > length ? (
+      {!expand && movie?.overview?.length > length ? (
         <span onClick={e => expandText(true)} className={styles.content}>more...</span>
-      ) : expand && text.length > length ? (
+      ) : expand && movie?.overview?.length > length ? (
         <span onClick={e => expandText(false)} className={styles.content}>...less</span>
       ) : <></>
       }
     </div>
   );
+}
+
+function createImgArray(movie) {
+
+  let imgs = [];
+  let urls = [`https://image.tmdb.org/t/p/original${movie?.poster_path}`, `https://image.tmdb.org/t/p/original${movie?.backdrop_path}`];
+
+  // urls = shuffle(urls);
+
+  imgs.push(
+  {
+    label: movie?.title || null,
+    imgPath: urls[0] || null,
+  },
+  {
+    label: movie?.title || null,
+    imgPath: urls[1] || null,
+  }
+  );
+
+  return imgs;
 }
