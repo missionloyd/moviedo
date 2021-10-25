@@ -79,6 +79,8 @@
 }
 
 .card {
+  display: flex;
+  flex-direction: column;
   margin: 1rem;
   padding: 1.5rem;
   text-align: left;
@@ -89,7 +91,7 @@
   border-radius: 10px;
   transition: color 0.15s ease, border-color 0.15s ease;
   /* max-width: 30rem; */
-  width: 100%;
+  /* width: 90%; */
 }
 
 .card:hover,
@@ -128,6 +130,7 @@
   flex-direction: row;
   align-items: center;
   margin-bottom: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .rating {

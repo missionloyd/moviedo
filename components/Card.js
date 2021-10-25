@@ -41,7 +41,7 @@ export default function Card({ movie, genres }) {
     <div 
       className={styles.card} 
       onClick={e => expandText(!expand)}
-      style={expand ? { maxWidth: '90%' } : { maxWidth: '28rem' }}
+      style={expand ? { maxWidth: '90%' } : { width: '28rem' }}
     >
       {movie?.poster_path &&
         <img 
