@@ -52,7 +52,9 @@ export default function Card({ movie, genres }) {
       <h2>{movie?.original_title}</h2>
       <div className={styles.ratingContainer}>
         <h3 className={styles.rating}>{movie?.vote_average}/10 ({movie?.vote_count} reviews)</h3>
-        <img src={'/images/tmdb.svg'} className={styles.tmdb}/>
+        <a className={styles.tmdb} href="https://www.themoviedb.org/" target="_blank">
+          <img src={'/images/tmdb.svg'} className={styles.tmdbLogo}/>
+        </a>
       </div>
       <div className={styles.extraInfo}>
         <strong className={styles.date}>Release Date: {reformatDate(movie?.release_date) || 'Unknown'}</strong>
