@@ -1,5 +1,7 @@
-import React from 'react';
+import Image from 'next/image';
+import React, { useState } from 'react';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
+import LoadingSpinner from './LoadingSpinner';
 import SwipeableViews from 'react-swipeable-views';
 import { autoPlay } from 'react-swipeable-views-utils';
 
@@ -8,7 +10,8 @@ const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 function SwipeableTextMobileStepper({ imgs, exp }) {
   const classes = useStyles();
   const theme = useTheme();
-  const [activeStep, setActiveStep] = React.useState(getRandomInt(1));
+  const [activeStep, setActiveStep] = useState(getRandomInt(1));
+  const [loading, setLoading] = useState(true);
 
   const handleStepChange = (step) => {
     setActiveStep(step);
@@ -24,13 +27,31 @@ function SwipeableTextMobileStepper({ imgs, exp }) {
       >
         {imgs?.map((step, index) => (
           <div key={index}>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <LoadingSpinner show={loading} />
+            </div>
             {Math.abs(activeStep - index) <= 2 ? (
-              <img 
-                className={exp ? classes.imgExpand : classes.imgDefault} 
-                src={step?.imgPath} 
-                alt={step.label} 
-              />
-            )  
+              exp ? (
+                <Image
+                  className={classes.imgDefault} 
+                  alt={step.title}
+                  src={step?.imgPath} 
+                  alt={step.label} 
+                  onLoad={() => setLoading(false)}
+                  width="600px" 
+                  height="500px"
+                />
+              ) : 
+                <Image
+                  className={classes.imgDefault}
+                  alt={step.title} 
+                  src={step?.imgPath} 
+                  alt={step.label} 
+                  onLoad={() => setLoading(false)}
+                  width="300px" 
+                  height="400px"
+                />
+            ) 
             : null}
           </div>
         ))}
@@ -57,19 +78,8 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: theme.spacing(4),
     backgroundColor: theme.palette.background.default,
   },
-  imgExpand: {
-    height: 420,
-    display: 'block',
-    // maxWidth: 400,
-    overflow: 'hidden',
-    width: '100%',
-    marginBottom: '1rem',
-    borderRadius: '10px',
-    objectFit: 'cover',
-    alignSelf: 'center',
-  },
   imgDefault: {
-    height: 250,
+    height: 'auto',
     display: 'block',
     // maxWidth: 400,
     overflow: 'hidden',
