@@ -7,11 +7,12 @@ import { shuffle } from '../util/shuffle';
 import YoutubeEmbed from './YouTubeEmbed';
 import YouTubeIcon from '@material-ui/icons/YouTube';
 
-export default function Card({ movie, genres }) {
-  const length = 118;
+export default function Card({ movie, genres, filter }) {
+  const length = 120;
   const [overview, setOverview] = useState(null);
   const [expand, setExpand] = useState(null);
   const [mounted, setMounted] = useState(false);
+  const [scroll, setScroll] = useState(false);
   const [trailers, setTrailers] = useState(null);
   const [currentTrailer, setCurrentTrailer] = useState(null);
 
@@ -19,16 +20,18 @@ export default function Card({ movie, genres }) {
     if(option === true) {
       setOverview(movie?.overview);
       setExpand(true);
+      setScroll(true);
     } else {
       setOverview(movie?.overview.substring(0, length));
       setExpand(false);
+      setScroll(true);
     }
   };
 
   useEffect(() => {
     const hashId = `anchor-${movie?.id}`;
     const element = document.getElementById(hashId);
-    if (element && mounted) {
+    if (element && mounted && scroll) {
       element.scrollIntoView({
         block: 'center',
         inline: 'center',
@@ -40,12 +43,14 @@ export default function Card({ movie, genres }) {
       setCurrentTrailer(null);
     }
 
+    if(expand) {
+      setOverview(movie?.overview);
+    }
+    else {
+      setOverview(movie?.overview.substring(0, length));
+    }
+
   }, [expand]);
-
-
-  useEffect(() => {
-    setOverview(movie?.overview.length > length ? movie?.overview.substring(0, length) : movie?.overview);
-  }, [movie.overview])
 
   useEffect(() => {
     setMounted(true);
@@ -54,7 +59,7 @@ export default function Card({ movie, genres }) {
   useEffect(() => {
     const source = axios.CancelToken.source();
 
-    if(!trailers && mounted) {
+    if(mounted) {
       const fetchData = async() => {
         try {
           await axios.get(`https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=${process.env.NEXT_PUBLIC_TMDB}&language=en-US`).then((movie) => {
@@ -68,14 +73,24 @@ export default function Card({ movie, genres }) {
     }
 
     return () => source.cancel()
-  }, [mounted]);
+  }, [expand]);
+
+  useEffect(() => {
+    setExpand(false);
+    setScroll(false);
+  }, [filter]);
+
+  const handleExpand = () => {
+    setExpand(!expand);
+    setScroll(true);
+  }
 
   return(
     <div 
       className={styles.card} 
       style={expand ? { maxWidth: '35rem' } : { maxWidth: '22rem' }}
     >
-      <div onClick={e => setExpand(!expand)} className={styles.clickable}>
+      <div onClick={e => handleExpand()} className={styles.clickable}>
         {movie?.poster_path &&
           <div className={styles.cover}>
             <ImageCarousel imgs={createImgArray(movie)} exp={expand} />
@@ -126,9 +141,9 @@ export default function Card({ movie, genres }) {
         (<YoutubeEmbed embedId={currentTrailer} />)
       } 
       <div className={styles.spacer} />
-      {!expand && movie?.overview?.length > length ? (
+      {!expand ? (
         <span onClick={e => expandText(true)} className={styles.content}>more...</span>
-      ) : expand && movie?.overview?.length > length ? (
+      ) : expand ? (
         <span onClick={e => expandText(false)} className={styles.content}>...less</span>
       ) : <></>
       }

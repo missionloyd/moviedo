@@ -8,7 +8,6 @@ import Button from '@material-ui/core/Button';
 import { createTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import styles from '../styles/Home.module.css';
-import { MovieRounded } from '@material-ui/icons';
 
 export async function getServerSideProps(context) {
   const movies = await axios.get(`https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.NEXT_PUBLIC_TMDB}&language=en-US&page=1`);
@@ -101,7 +100,7 @@ export default function Home({ movies, genres }) {
               const list = getMovieGenres(movie, genres)
 
               return(
-                <Card movie={movie} genres={list} key={key} />
+                <Card movie={movie} genres={list} filter={filter} key={key} />
               );
             }
           })}
