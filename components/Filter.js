@@ -7,6 +7,16 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
     minWidth: 120,
   },
+  select: {
+    borderColor: theme.palette.secondary.main,
+
+    '&:before': {
+        borderColor: theme.palette.secondary.main,
+    },
+    '&:after': {
+        borderColor: theme.palette.secondary.main,
+    }
+},
 }));
 
 export default function Filter({ data, filter, setFilter, setQueue }) {
@@ -68,11 +78,13 @@ export default function Filter({ data, filter, setFilter, setQueue }) {
     <FormControl variant="outlined" className={classes.formControl}>
     <InputLabel id="outlined-label">Sort By</InputLabel>
       <Select
+        className={classes.select}
         labelId="outlined-label"
         id="select-outlined"
         value={filter}
         onChange={e => handleFilterChange(e)}
         label="Sort By"
+        //color='secondary'
       >
         {/* <MenuItem value={"None"}>No Filter</MenuItem> */}
         {/* <ListSubheader>Options:</ListSubheader> */}
