@@ -6,6 +6,7 @@ import axios from 'axios';
 import { shuffle } from '../util/shuffle';
 import YoutubeEmbed from './YouTubeEmbed';
 import YouTubeIcon from '@material-ui/icons/YouTube';
+import { isMobile } from 'react-device-detect';
 
 export default function Card({ movie, genres, filter }) {
   const length = 120;
@@ -31,7 +32,7 @@ export default function Card({ movie, genres, filter }) {
   useEffect(() => {
     const hashId = `anchor-${movie?.id}`;
     const element = document.getElementById(hashId);
-    if (element && mounted && scroll) {
+    if (element && mounted && scroll && !isMobile) {
       element.scrollIntoView({
         block: 'center',
         inline: 'center',

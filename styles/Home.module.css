@@ -101,6 +101,7 @@
 .content:focus,
 .content:active {
   text-decoration: underline;
+  cursor: pointer;
 }
 
 .card h2 {
